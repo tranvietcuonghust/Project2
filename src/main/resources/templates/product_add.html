@@ -61,7 +61,18 @@
           <label for="description">Product Description</label>
           <textarea class="form-control" rows="5" th:field="*{description}" name="description" id="description"></textarea>
         </div>
+<!--        <fieldset id="items">-->
+<!--          <div th:each=", stat : ${product.size}">-->
+<!--            <label th:for="|order.items[${stat.index}].name|">Name</label>-->
+<!--            &lt;!&ndash; This construct will render field name like this: "items[0].name" &ndash;&gt;-->
+<!--            <input th:field="${order.items[__${stat.index}__].name}">-->
+
+<!--            <button type="button" name="removeItem" th:value="${stat.index}">Remove item</button>-->
+<!--          </div>-->
+<!--        </fieldset>-->
+<!--        <button type="button" class="btn btn-primary">+</button>-->
       </div>
+
       <div class="col-sm-5">
         <p>Product Image</p>
         <div class="custom-file">

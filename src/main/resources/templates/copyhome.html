@@ -70,8 +70,8 @@
 
     <h1 class="display-4">Welcome <span th:if="not ${not_authenticated}" th:text="${customer.name}"> </span></h1>
     <p>Take a trip to the Foot Wear Store</p>
-    <form th:action="@{/users/add}">
-        <button type="submit" class="btn btn-primary">Manage your Account</button>
+    <form th:action="@{/shop}">
+        <button type="submit" class="btn btn-primary">Start Shopping</button>
     </form>
 </div>
 <div class="container">

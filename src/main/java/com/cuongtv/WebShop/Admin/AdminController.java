@@ -1,5 +1,10 @@
 package com.cuongtv.WebShop.Admin;
 
+import com.cuongtv.WebShop.Customer.Customer;
+import com.cuongtv.WebShop.Customer.CustomerService;
+import com.cuongtv.WebShop.Order.Order;
+import com.cuongtv.WebShop.Order.OrderService;
+import com.cuongtv.WebShop.Order.OrderedItem;
 import com.cuongtv.WebShop.Product.Product;
 import com.cuongtv.WebShop.Product.ProductDTO;
 import com.cuongtv.WebShop.Product.ProductService;
@@ -13,14 +18,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
 public class AdminController {
 
     public static String uploadDir= System.getProperty("user.dir")+ "/src/main/resources/static/productImages";
+    public static String uploadDir2= System.getProperty("user.dir")+ "/target/classes/static/productImages";
+
     @Autowired
     ProductService productService;
+    @Autowired
+    OrderService orderService;
+    @Autowired
+    CustomerService customerService;
 
     @GetMapping("/admin")
     public String adminHome()
@@ -33,6 +45,32 @@ public class AdminController {
     {
         model.addAttribute("products",productService.getAllProduct());
         return "products";
+    }
+    @GetMapping("/admin/customers")
+    public String CustomerManage(Model model)
+    {
+        model.addAttribute("customers",customerService.getAllCustomer());
+        return "customers";
+    }
+    @GetMapping("/admin/orders")
+    public String OrderManage(Model model)
+    {
+        model.addAttribute("orders",orderService.getAllOrder());
+        return "AdminOrderManage";
+    }
+    @GetMapping("/admin/orders/update/{id}")
+    public String getOrderEdit(@PathVariable Long id, Model model)
+    {
+        Order order = orderService.getOrderById(id).get();
+        List<OrderedItem> orderedItemList = orderService.getOrderedItem(id);
+        model.addAttribute("order",order);
+        model.addAttribute("orderitems",orderedItemList);
+        return "viewOrder";
+    }
+    @PostMapping("/admin/orders/update/{id}")
+    public String postOrderEdit(@ModelAttribute Order order)  {
+        orderService.updateOrder(order);
+        return "redirect:/admin/orders";
     }
     @GetMapping("/admin/products/add")
     public String getProductAdd(Model model)
@@ -50,6 +88,8 @@ public class AdminController {
             imageUUID = file.getOriginalFilename();
             Path fileNameAndPath = Paths.get(uploadDir,imageUUID);
             Files.write(fileNameAndPath,file.getBytes());
+            Path fileNameAndPath2 = Paths.get(uploadDir2,imageUUID);
+            Files.write(fileNameAndPath2,file.getBytes());
         }
         else{
             imageUUID=imageName;
@@ -75,10 +115,28 @@ public class AdminController {
     public String getProductUpdate(@PathVariable Long id, Model model)
     {
         Product product = productService.getProductById(id).get();
-        //ProductDTO
-        // product.set.....
-        //model.addAttribute();
+
+        model.addAttribute("product", product);
         return "product_update";
+    }
+    @PostMapping("/shop/product/update/{id}")
+    public String processProductUpdate(@PathVariable Long id,
+                                       @ModelAttribute Product product,
+                                       @RequestParam("productImage") MultipartFile fileProductImage
+                                       ) throws IOException {
+        productService.updateProduct(id, product, fileProductImage);
+        return "redirect:/admin/products";
+    }
+    @RequestMapping("/admin/orders/search")
+    public String searchProducts(Model model,@RequestParam("id") String id,
+                                 @RequestParam("name") String name,@RequestParam("phone") String phone,@RequestParam("status") String status){
+        List<Order> orderList = orderService.multiSearch(id, name, phone, status);
+        model.addAttribute("orders", orderList);
+        model.addAttribute("id", id);
+        model.addAttribute("name", name);
+        model.addAttribute("phone", phone);
+        model.addAttribute("status", status);
+        return "AdminOrderManage";
     }
 
 

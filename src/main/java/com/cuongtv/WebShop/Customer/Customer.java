@@ -1,6 +1,8 @@
 package com.cuongtv.WebShop.Customer;
 
 
+import com.cuongtv.WebShop.Cart.Cart;
+import com.cuongtv.WebShop.Order.Order;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,17 +10,15 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table (name="customers")
 @Getter
 @Setter
-@AllArgsConstructor
+
 public class Customer implements UserDetails {
     @Id
     @Column (name = "customer_id")
@@ -32,6 +32,12 @@ public class Customer implements UserDetails {
     @Column (name ="customer_email")
     private String email;
 
+    @OneToOne(mappedBy = "customer")
+    private Cart cart;
+
+    @OneToMany(mappedBy = "customer",
+            fetch = FetchType.LAZY)
+    private List<Order> orders;
 
     public Customer() {
 
