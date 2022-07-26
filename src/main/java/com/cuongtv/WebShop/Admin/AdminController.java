@@ -79,6 +79,8 @@ public class AdminController {
         model.addAttribute("productDTO", new ProductDTO());
         return "product_add";
     }
+
+
     @PostMapping("/admin/products/vars")
     public String setSizeStock(@RequestParam("size") String size,
                                @RequestParam("stock") int stock,
@@ -86,8 +88,7 @@ public class AdminController {
         ProductVar productVar = new ProductVar();
         productVar.setSize(size);
         productVar.setStock(stock);
-        GlobalData.productVars.add(productVar);
-        productDTO.setVars(GlobalData.productVars);
+        productDTO.getVars().add(productVar);
         model.addAttribute("productDTO", productDTO);
         return "product_add::#items";
     }
@@ -95,8 +96,7 @@ public class AdminController {
     @PostMapping("/admin/products/vars/delete/{index}")
     public String setSizeStock(@PathVariable int index,
                                @ModelAttribute ProductDTO productDTO, Model model){
-        GlobalData.productVars.remove(index);
-        productDTO.setVars(GlobalData.productVars);
+        productDTO.getVars().remove(index);
         model.addAttribute("productDTO", productDTO);
         return "product_add::#items";
     }
@@ -124,12 +124,11 @@ public class AdminController {
         product.setDescription(productDTO.getDescription());
         product.setImageName(imageUUID);
         productService.addProduct(product);
-        for (ProductVar productVar : GlobalData.productVars)
+        for (ProductVar productVar : productDTO.getVars())
         {
             productVar.setProduct(product);
             productService.addProductVar(productVar);
         }
-        GlobalData.productVars.clear();
         return "redirect:/admin/products";
     }
 
@@ -146,8 +145,8 @@ public class AdminController {
         ProductVar productVar = new ProductVar();
         productVar.setSize(size);
         productVar.setStock(stock);
-        GlobalData.productVars.add(productVar);
-        productDTO.setVars(GlobalData.productVars);
+//        GlobalData.productVars.add(productVar);
+//        productDTO.setVars(GlobalData.productVars);
         model.addAttribute("productDTO", productDTO);
         return "product_update::#items";
     }
@@ -155,8 +154,8 @@ public class AdminController {
     @PostMapping("/admin/product/update/vars/delete/{index}")
     public String updateSizeStock(@PathVariable int index,
                                @ModelAttribute ProductDTO productDTO, Model model){
-        GlobalData.productVars.remove(index);
-        productDTO.setVars(GlobalData.productVars);
+//        GlobalData.productVars.remove(index);
+//        productDTO.setVars(GlobalData.productVars);
         model.addAttribute("productDTO", productDTO);
         return "product_update::#items";
     }
@@ -165,10 +164,7 @@ public class AdminController {
     public String getProductUpdate(@PathVariable Long id, Model model)
     {
         Product product = productService.getProductById(id).get();
-        //List<ProductVar> productVarList = productService.getProductVar(product);
-        //GlobalData.productVars =productVarList;
         model.addAttribute("product", product);
-        //model.addAttribute("productvars",GlobalData.productVars);
         return "product_update";
     }
     @PostMapping("/shop/product/update/{id}")
