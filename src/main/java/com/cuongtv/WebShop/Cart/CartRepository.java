@@ -15,6 +15,7 @@ import java.util.Optional;
 public interface CartRepository extends JpaRepository<Cart, Long> {
     Optional<Cart> findByCustomer(Customer customer);
 
+
 //    @Query(value="SELECT pd.product_id, pd.image, pd.product_name, pd.description, pd.product_size, count(pd.product_id) as quantity FROM cart_product cp,products pd WHERE cp.cart_id = :cart_id " +
 //            "and pd.product_id =  cp.product_product_id " +
 //            "GROUP BY product_id, image, product_name, description, product_size",nativeQuery = true)

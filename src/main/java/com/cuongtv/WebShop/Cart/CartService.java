@@ -49,6 +49,14 @@ public class CartService {
 
     }
 
+    public void clearCart(Customer customer){
+        Cart cart= cartRepository.findByCustomer(customer).get();
+        List<ProductVar> productList = cart.getProductvar();
+        productList.clear();
+        cart.setProductvar(productList);
+        cartRepository.save(cart);
+    }
+
     public List<OrderedItem> groupProduct(Customer customer)
     {
         Cart cart= cartRepository.findByCustomer(customer).get();

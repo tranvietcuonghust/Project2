@@ -1,6 +1,7 @@
 package com.cuongtv.WebShop.Order;
 
 
+import com.cuongtv.WebShop.Admin.Statistic;
 import com.cuongtv.WebShop.Cart.CartService;
 import com.cuongtv.WebShop.Customer.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,10 @@ public class OrderService {
         oldOrder.setStatus(order.getStatus());
         orderRepository.save(oldOrder);
     }
+    public List<Statistic> getStatistic7days()
+    {return orderRepository.getRevenue7days();}
+    public List<Statistic> getStatistic30days()
+    {return orderRepository.getRevenue30days();}
 
 
 

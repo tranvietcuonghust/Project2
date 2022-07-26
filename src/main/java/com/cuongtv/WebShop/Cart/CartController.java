@@ -66,6 +66,7 @@ public class CartController {
         model.addAttribute("total", total);
         //model.addAttribute("cart", GlobalData.cart);
         model.addAttribute("orderDTO", new OrderDTO());
+        cartService.clearCart(customer);
         return "checkoutCopy";
     } // checkout totalPrice
 }

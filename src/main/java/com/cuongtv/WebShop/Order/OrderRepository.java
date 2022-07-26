@@ -1,5 +1,7 @@
 package com.cuongtv.WebShop.Order;
 
+import com.cuongtv.WebShop.Admin.Statistic;
+import com.cuongtv.WebShop.Customer.Customer;
 import com.cuongtv.WebShop.Product.Product;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -10,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -34,4 +37,45 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "(:status is null or o.status LIKE %:status%)"
                     ,nativeQuery = true)
     public List<Order> multiSearch(String id, String Name, String Phone, String status);
+
+    @Query(value ="SELECT o.create_date as create_date, count(distinct o.order_id) as numOrder, sum(oi.price) as revenue FROM orders o, ordered_items oi " +
+            "WHERE o.order_id = oi.order_id and o.create_date > current_date - 7 GROUP BY o.create_date"
+            ,nativeQuery = true)
+    public List<Statistic> getRevenue7days();
+    @Query(value ="SELECT o.create_date as create_date, count(distinct o.order_id) as numOrder, sum(oi.price) as revenue FROM orders o, ordered_items oi " +
+            "WHERE o.order_id = oi.order_id and o.create_date > current_date - 30 GROUP BY o.create_date"
+            ,nativeQuery = true)
+    public List<Statistic> getRevenue30days();
+    @Query(value = "SELECT Top 1 p " +
+            "FROM orders o, ordered_items oi, product p " +
+            "WHERE o.order_id = oi.ordereditem_id and " +
+            "oi.product_id=p.product_id and " +
+            "o.create_date > current_date - 7 GROUP BY o.create_date,p.product_id" +
+            "ORDER BY sum(oi.price)",nativeQuery = true)
+    public Product getTopProduct7days();
+    @Query(value = "SELECT Top 1 p " +
+            "FROM orders o, ordered_items oi, product p " +
+            "WHERE o.order_id = oi.ordereditem_id and " +
+            "oi.product_id=p.product_id and " +
+            "o.create_date > current_date - 30 GROUP BY o.create_dat,p.product_id" +
+            "ORDER BY sum(oi.price)",nativeQuery = true)
+    public Product getTopProduct30days();
+
+    @Query(value = "SELECT  Top 1 c " +
+            "FROM orders o, ordered_items oi, customer c " +
+            "WHERE o.order_id = oi.ordereditem_id and " +
+            "o.customer_id=c.customer_id and " +
+            "o.create_date > current_date - 7 GROUP BY o.create_date, c.customer_id" +
+            "ORDER BY sum(oi.price)",nativeQuery = true)
+    public Customer getTopCustomer7days();
+    @Query(value = "SELECT Top 1 c " +
+            "FROM orders o, ordered_items oi, product p " +
+            "WHERE o.order_id = oi.ordereditem_id and " +
+            "o.customer_id=p.customer_id and " +
+            "o.create_date > current_date - 30 GROUP BY o.create_date, c.customer_id" +
+            "ORDER BY sum(oi.price)",nativeQuery = true)
+    public Customer getTopCustomer30days();
+
+
+
 }
