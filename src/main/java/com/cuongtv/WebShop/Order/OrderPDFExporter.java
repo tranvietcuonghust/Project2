@@ -35,6 +35,9 @@ public class OrderPDFExporter {
         cell.setPhrase(new Phrase("P.Name", font));
         table.addCell(cell);
 
+        cell.setPhrase(new Phrase("Size", font));
+        table.addCell(cell);
+
         cell.setPhrase(new Phrase("Quantity", font));
         table.addCell(cell);
 
@@ -50,9 +53,10 @@ public class OrderPDFExporter {
         for (OrderedItem orderedItem : orderedItemList) {
             table.addCell("     "+String.valueOf(orderedItem.getOrderedItemID()));
             //table.addCell(String.valueOf(orderedItem.getOrder().getId()));
-            table.addCell(orderedItem.getProduct().getName());
-            table.addCell("      "+String.valueOf(orderedItem.getQuantity()));
-            table.addCell("    "+String.valueOf(orderedItem.getProduct().getPrice()) +"$");
+            table.addCell(orderedItem.getProductvar().getProduct().getName());
+            table.addCell(" "+orderedItem.getProductvar().getSize());
+            table.addCell("     "+String.valueOf(orderedItem.getQuantity()));
+            table.addCell("    "+String.valueOf(orderedItem.getProductvar().getProduct().getPrice()) +"$");
             table.addCell("    "+String.valueOf(orderedItem.getPrice())+"$");
             Total+=orderedItem.getPrice();
         }
@@ -82,9 +86,9 @@ public class OrderPDFExporter {
 
         document.add(p1);
 
-        PdfPTable table = new PdfPTable(5);
+        PdfPTable table = new PdfPTable(6);
         table.setWidthPercentage(100f);
-        table.setWidths(new float[] {0.9f, 1.5f, 1.0f, 1.0f, 1.0f});
+        table.setWidths(new float[] {1.0f,1.5f, 0.8f, 1.0f, 1.0f, 1.0f});
         table.setSpacingBefore(20);
         table.setHorizontalAlignment(Element.ALIGN_CENTER);
         writeTableHeader(table);

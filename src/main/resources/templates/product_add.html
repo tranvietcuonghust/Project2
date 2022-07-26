@@ -42,7 +42,7 @@
   <h3>Product Infor</h3>
   <form th:action="@{/admin/products/add}" method="post" th:object="${productDTO}" enctype="multipart/form-data">
     <div class="row">
-      <div class="col-sm-5">
+      <div class="col-sm-7">
 
         <input type="hidden" name="id" th:field="*{id}">
         <div class="form-group">
@@ -61,16 +61,60 @@
           <label for="description">Product Description</label>
           <textarea class="form-control" rows="5" th:field="*{description}" name="description" id="description"></textarea>
         </div>
-<!--        <fieldset id="items">-->
-<!--          <div th:each=", stat : ${product.size}">-->
-<!--            <label th:for="|order.items[${stat.index}].name|">Name</label>-->
-<!--            &lt;!&ndash; This construct will render field name like this: "items[0].name" &ndash;&gt;-->
-<!--            <input th:field="${order.items[__${stat.index}__].name}">-->
 
-<!--            <button type="button" name="removeItem" th:value="${stat.index}">Remove item</button>-->
-<!--          </div>-->
-<!--        </fieldset>-->
-<!--        <button type="button" class="btn btn-primary">+</button>-->
+        <table class="table" id="items">
+          <thead class="thead-light">
+          <tr>
+            <th scope="col">Size</th>
+            <th scope="col">Stock</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+
+          <tr th:each="var, iStat : ${productDTO.vars}">
+            <td th:text="${var.size}">M</td>
+            <td th:text="${var.stock}">10</td>
+            <td><button name="removeItem" th:value="${iStat.index}" class="btn btn-danger">Delete</button></td>
+          </tr>
+
+          <tr>
+            <td><input type="text" name="size" id="size" /></td>
+            <td><input type="text" name="stock" id="stock"/></td>
+            <td><button type="button" name="addItem" class="btn btn-info">Insert</button></td>
+          </tr>
+          </tbody>
+          <script
+                  src="https://code.jquery.com/jquery-3.6.0.js"
+                  integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+                  crossOrigin="anonymous"></script>
+          <script>
+
+            function replaceItems (html) {
+              // Replace the <fieldset id="items"> with a new one returned by server.
+              $('#items').replaceWith($(html));
+            }
+            $('button[name="addItem"]').click(function (event) {
+              event.preventDefault();
+              var data = $('form').serialize();
+              // Add parameter "addItem" to POSTed form data. Button's name and value is
+              // POSTed only when clicked. Since "event.preventDefault();" prevents from
+              // actual clicking the button, following line will add parameter to form
+              // data.
+              // data += "size=" + $("#size").val();
+              // data += 'stock=' + $("#stock").val();
+              $.post("/admin/products/vars", data, replaceItems);
+            });
+
+            $('button[name="removeItem"]').click(function (event) {
+              event.preventDefault();
+              var data = $('form').serialize();
+              var index = $(this).val();
+              $.post(`/admin/products/vars/delete/${index}`, data, replaceItems);
+            });
+          </script>
+        </table>
+
       </div>
 
       <div class="col-sm-5">
@@ -82,7 +126,8 @@
         <div class="form-group">
           <img src="#" id="imgPreview" height="100px" width="100px" th:src="@{${'/productImages/' + productDTO.imageName}}" style="margin-top: 20px" alt=" ">
         </div>
-        <input type="hidden" name="imageName" th:value="${productDTO.imageName}">
+<!--        th:value="${productDTO.imageName}"-->
+        <input type="hidden" name="imageName" value="none">
         <button type="submit" class="btn btn-primary">Submit</button>
       </div>
 
@@ -91,8 +136,9 @@
 </div>
 
 
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+<script
+        src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
         crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
@@ -113,10 +159,16 @@
   $('#productImage').change(function(){
     readURL(this);
   });
+
   $(".custom-file-input").on("change", function() {
     var fileName = $(this).val().split("\\").pop();
     $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
   });
+
+
+
+
+
 </script>
 </body>
 </html>

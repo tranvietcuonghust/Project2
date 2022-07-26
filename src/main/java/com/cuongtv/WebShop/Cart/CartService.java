@@ -3,6 +3,7 @@ package com.cuongtv.WebShop.Cart;
 import com.cuongtv.WebShop.Customer.Customer;
 import com.cuongtv.WebShop.Order.OrderedItem;
 import com.cuongtv.WebShop.Product.Product;
+import com.cuongtv.WebShop.Product.ProductVar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +16,11 @@ import java.util.Map;
 public class CartService {
     @Autowired
     CartRepository cartRepository;
-   public List<Product> listCartItems(Customer customer) {
+    public List<ProductVar> listCartItems(Customer customer) {
        Cart cart= cartRepository.findByCustomer(customer).get();
        //Cart cart= cartRepository.findByCustomer(customer).get();
 
-       return cart.getProduct();
+       return cart.getProductvar();
    }
 
    public void createCart(Customer customer){
@@ -28,12 +29,12 @@ public class CartService {
        cartRepository.save(cart);
    }
 
-   public void addToCart(Customer customer, Product product){
+   public void addToCart(Customer customer, ProductVar productVar){
 
        Cart cart= cartRepository.findByCustomer(customer).get();
-       List<Product> productList = cart.getProduct();
-       productList.add(product);
-       cart.setProduct(productList);
+       List<ProductVar> productList = cart.getProductvar();
+       productList.add(productVar);
+       cart.setProductvar(productList);
        cartRepository.save(cart);
 
    }
@@ -41,9 +42,9 @@ public class CartService {
     public void removeFromCart(Customer customer, int index){
 
         Cart cart= cartRepository.findByCustomer(customer).get();
-        List<Product> productList = cart.getProduct();
+        List<ProductVar> productList = cart.getProductvar();
         productList.remove(index);
-        cart.setProduct(productList);
+        cart.setProductvar(productList);
         cartRepository.save(cart);
 
     }
@@ -51,21 +52,21 @@ public class CartService {
     public List<OrderedItem> groupProduct(Customer customer)
     {
         Cart cart= cartRepository.findByCustomer(customer).get();
-        List<Product> productList = cart.getProduct();
-        Map<Product, Long> productIntegerMap = new HashMap<>();
-        for (Product product : productList){
+        List<ProductVar> productList = cart.getProductvar();
+        Map<ProductVar, Long> productIntegerMap = new HashMap<>();
+        for (ProductVar product : productList){
             if(productIntegerMap.containsKey(product)){
                 productIntegerMap.replace(product, productIntegerMap.get(product)+1);
             }
             else productIntegerMap.put(product, 1L);
         }
         List<OrderedItem> orderedItemList = new ArrayList<>();
-        for (Product product : productIntegerMap.keySet())
+        for (ProductVar product : productIntegerMap.keySet())
         {
             OrderedItem orderedItem = new OrderedItem();
-            orderedItem.setProduct(product);
+            orderedItem.setProductvar(product);
             orderedItem.setQuantity(productIntegerMap.get(product));
-            orderedItem.setPrice(productIntegerMap.get(product)*product.getPrice());
+            orderedItem.setPrice(productIntegerMap.get(product)*product.getProduct().getPrice());
             orderedItemList.add(orderedItem);
         }
         return orderedItemList;

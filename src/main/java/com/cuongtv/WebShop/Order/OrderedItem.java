@@ -1,6 +1,7 @@
 package com.cuongtv.WebShop.Order;
 
 import com.cuongtv.WebShop.Product.Product;
+import com.cuongtv.WebShop.Product.ProductVar;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,8 +19,8 @@ public class OrderedItem {
     private Long OrderedItemID;
 
     @OneToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "product_id")
-    private Product product;
+    @JoinColumn(name = "productvar_id", referencedColumnName = "productvar_id")
+    private ProductVar productvar;
     @ManyToOne
     //@JsonIgnore
     @JoinColumn(name = "order_id", referencedColumnName = "order_id")

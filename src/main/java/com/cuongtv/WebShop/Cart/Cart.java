@@ -2,6 +2,7 @@ package com.cuongtv.WebShop.Cart;
 
 import com.cuongtv.WebShop.Customer.Customer;
 import com.cuongtv.WebShop.Product.Product;
+import com.cuongtv.WebShop.Product.ProductVar;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +28,7 @@ public class Cart {
     //private Date createdDate;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Product> product;
+    private List<ProductVar> productvar;
 
    // @JsonIgnore
 //   @OneToOne(targetEntity = Customer.class, fetch = FetchType.EAGER)

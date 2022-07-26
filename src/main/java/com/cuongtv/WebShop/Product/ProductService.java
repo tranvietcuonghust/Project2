@@ -21,6 +21,8 @@ import static com.cuongtv.WebShop.Admin.AdminController.uploadDir2;
 public class ProductService {
     @Autowired
     public  ProductRepository productRepository;
+    @Autowired
+    public  ProductVarRepository productVarRepository;
     public List<Product> getAllProduct() {
         return productRepository.findAll();
     }
@@ -29,6 +31,16 @@ public class ProductService {
     public void addProduct(Product product) {
         productRepository.save(product);
     }
+    public void addProductVar(ProductVar productVar) {
+        productVarRepository.save(productVar);
+    }
+    public List<ProductVar> getProductVar(Product product){
+       return productVarRepository.findByProductId(product.getProduct_id());
+    }
+    public Optional<ProductVar> getProductVarById(Long Id){
+        return productVarRepository.findById(Id);
+    }
+    public void saveProductVar(ProductVar productVar){ productVarRepository.save(productVar);}
     public void removeProduct(Long Id)
     {
         Product product = productRepository.findById(Id).get();

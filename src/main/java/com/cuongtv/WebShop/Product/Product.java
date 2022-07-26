@@ -27,20 +27,15 @@ public class Product {
     private String name;
     @Column(name = "price")
     private double price;
-    @Column (name = "product_size")
-    private double size;
-    @Column (name = "quantity")
-    private int quantity;
     @Lob
     @Column (name = "description")
     private String description;
     @Column (name = "image")
     private String imageName;
 
-    @ManyToMany(mappedBy = "product")
-    private List<Cart> cart;
-//    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
-//    private List<ProductVar> productVars;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<ProductVar> productVars;
 
     @Override
     public boolean equals(Object o) {

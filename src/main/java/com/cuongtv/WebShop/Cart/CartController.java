@@ -6,6 +6,7 @@ import com.cuongtv.WebShop.Order.Order;
 import com.cuongtv.WebShop.Order.OrderDTO;
 import com.cuongtv.WebShop.Product.Product;
 import com.cuongtv.WebShop.Product.ProductService;
+import com.cuongtv.WebShop.Product.ProductVar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,18 +27,23 @@ public class CartController {
     @GetMapping("/cart")
     public String cartGet(Model model){
         Customer customer = customerService.getCurrentCustomer();
-        List<Product> productList = cartService.listCartItems(customer);
+        List<ProductVar> productList = cartService.listCartItems(customer);
+        Double total = 0.0;
+        for(ProductVar productVar : productList){
+            total+=productVar.getProduct().getPrice();
+        }
         model.addAttribute("cartCount", productList.size());
-        model.addAttribute("total", productList.stream().mapToDouble(Product::getPrice).sum());
+        model.addAttribute("total", total);
         model.addAttribute("cart", productList);
         return "cartCopy";
     }
 
-    @GetMapping("/addToCart/{id}")
-    public String addToCart(@PathVariable long id){
-        Product product = productService.getProductById(id).get();
+    @GetMapping("/addToCart/{sizeid}")
+    public String addToCart(@PathVariable long sizeid){
+       //Product product = productService.getProductById(id).get();
+        ProductVar productVar = productService.getProductVarById(sizeid).get();
         Customer customer = customerService.getCurrentCustomer();
-        cartService.addToCart(customer, product);
+        cartService.addToCart(customer, productVar);
         return "redirect:/shop";
     }//click add from page viewProduct
 
@@ -51,9 +57,13 @@ public class CartController {
     @GetMapping("/checkout")
     public String checkout(Model model){
         Customer customer = customerService.getCurrentCustomer();
-        List<Product> productList = cartService.listCartItems(customer);
+        List<ProductVar> productList = cartService.listCartItems(customer);
+        double total=0.0;
+        for(ProductVar productVar : productList){
+            total+=productVar.getProduct().getPrice();
+        }
         model.addAttribute("cartCount", productList.size());
-        model.addAttribute("total", productList.stream().mapToDouble(Product::getPrice).sum());
+        model.addAttribute("total", total);
         //model.addAttribute("cart", GlobalData.cart);
         model.addAttribute("orderDTO", new OrderDTO());
         return "checkoutCopy";

@@ -60,12 +60,32 @@
         </div>
         <div class="col-sm-7 mt-5">
             <h2 th:text="${product.name}"></h2>
-            <h2>₹ <span th:text="${product.price}"></span></h2>
+            <h2>$ <span th:text="${product.price}"></span></h2>
 
             <p th:text="${product.description}"></p>
-            <a href="" th:href="@{/addToCart/{id}(id = ${product.product_id})}" class="btn btn-primary">Add to cart</a>
+
+<!--            <a href="" th:href="@{/addToCart/{id}(id = ${product.product_id})}" class="btn btn-primary">Add to cart</a>-->
         </div>
     </div>
+    <br>
+    <table class="table">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">Size</th>
+            <th scope="col">Stock</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="var, iStat : ${productvars}">
+            <td th:text="${var.size}">Larry</td>
+            <td th:text="${var.stock}">Larry</td>
+            <td><a href="" th:href="@{/addToCart/{sizeid}(sizeid = ${var.id})}" class="btn btn-primary">Add to cart</a></td>
+
+        </tr>
+        </tbody>
+    </table>
 </div>
 
 

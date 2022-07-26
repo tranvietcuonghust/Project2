@@ -8,6 +8,7 @@ import com.cuongtv.WebShop.Order.OrderedItem;
 import com.cuongtv.WebShop.Product.Product;
 import com.cuongtv.WebShop.Product.ProductDTO;
 import com.cuongtv.WebShop.Product.ProductService;
+import com.cuongtv.WebShop.Product.ProductVar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -78,6 +79,28 @@ public class AdminController {
         model.addAttribute("productDTO", new ProductDTO());
         return "product_add";
     }
+    @PostMapping("/admin/products/vars")
+    public String setSizeStock(@RequestParam("size") String size,
+                               @RequestParam("stock") int stock,
+                               @ModelAttribute ProductDTO productDTO, Model model){
+        ProductVar productVar = new ProductVar();
+        productVar.setSize(size);
+        productVar.setStock(stock);
+        GlobalData.productVars.add(productVar);
+        productDTO.setVars(GlobalData.productVars);
+        model.addAttribute("productDTO", productDTO);
+        return "product_add::#items";
+    }
+
+    @PostMapping("/admin/products/vars/delete/{index}")
+    public String setSizeStock(@PathVariable int index,
+                               @ModelAttribute ProductDTO productDTO, Model model){
+        GlobalData.productVars.remove(index);
+        productDTO.setVars(GlobalData.productVars);
+        model.addAttribute("productDTO", productDTO);
+        return "product_add::#items";
+    }
+
     @PostMapping("/admin/products/add")
     public String postProductAdd(@ModelAttribute("productDTO") ProductDTO productDTO,
                                  @RequestParam("productImage") MultipartFile file,
@@ -101,6 +124,12 @@ public class AdminController {
         product.setDescription(productDTO.getDescription());
         product.setImageName(imageUUID);
         productService.addProduct(product);
+        for (ProductVar productVar : GlobalData.productVars)
+        {
+            productVar.setProduct(product);
+            productService.addProductVar(productVar);
+        }
+        GlobalData.productVars.clear();
         return "redirect:/admin/products";
     }
 
@@ -110,13 +139,36 @@ public class AdminController {
         productService.removeProduct(id);
         return "redirect:/admin/products";
     }
+    @PostMapping("/admin/products/update/vars")
+    public String updateSizeStock(@RequestParam("size") String size,
+                               @RequestParam("stock") int stock,
+                               @ModelAttribute ProductDTO productDTO, Model model){
+        ProductVar productVar = new ProductVar();
+        productVar.setSize(size);
+        productVar.setStock(stock);
+        GlobalData.productVars.add(productVar);
+        productDTO.setVars(GlobalData.productVars);
+        model.addAttribute("productDTO", productDTO);
+        return "product_update::#items";
+    }
+
+    @PostMapping("/admin/product/update/vars/delete/{index}")
+    public String updateSizeStock(@PathVariable int index,
+                               @ModelAttribute ProductDTO productDTO, Model model){
+        GlobalData.productVars.remove(index);
+        productDTO.setVars(GlobalData.productVars);
+        model.addAttribute("productDTO", productDTO);
+        return "product_update::#items";
+    }
 
     @GetMapping("/admin/products/update/{id}")
     public String getProductUpdate(@PathVariable Long id, Model model)
     {
         Product product = productService.getProductById(id).get();
-
+        //List<ProductVar> productVarList = productService.getProductVar(product);
+        //GlobalData.productVars =productVarList;
         model.addAttribute("product", product);
+        //model.addAttribute("productvars",GlobalData.productVars);
         return "product_update";
     }
     @PostMapping("/shop/product/update/{id}")

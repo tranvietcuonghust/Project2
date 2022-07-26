@@ -11,6 +11,7 @@ import com.cuongtv.WebShop.Order.OrderService;
 import com.cuongtv.WebShop.Order.OrderedItem;
 import com.cuongtv.WebShop.Product.Product;
 import com.cuongtv.WebShop.Product.ProductService;
+import com.cuongtv.WebShop.Product.ProductVar;
 import com.cuongtv.WebShop.registration.RegistrationRequest;
 import com.cuongtv.WebShop.registration.RegistrationService;
 import com.lowagie.text.DocumentException;
@@ -106,7 +107,9 @@ public class HomeController {
     @GetMapping("/shop/viewproduct/{id}")
     public String viewProduct(@PathVariable long id, Model model){
         //model.addAttribute("cartCount", GlobalData.cart.size());
+
         model.addAttribute("product", productService.getProductById(id).get());
+        model.addAttribute("productvars", productService.getProductVar(productService.getProductById(id).get()));
         return "viewProductCopy";
     }
 

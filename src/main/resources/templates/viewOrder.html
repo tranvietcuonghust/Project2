@@ -56,7 +56,7 @@
                     <tbody>
                     <tr th:each="orderitem, iStat : ${orderitems}">
                         <th scope="row" th:text="${iStat.index + 1}">1</th>
-                        <td th:text="${orderitem.product.name}">Larry</td>
+                        <td th:text="${orderitem.productvar.product.name}">Larry</td>
                         <td th:text="${orderitem.quantity}">Larry</td>
                         <td th:text="${orderitem.price}">Larry</td>
                     </tr>
