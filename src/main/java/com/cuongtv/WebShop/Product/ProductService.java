@@ -23,11 +23,12 @@ public class ProductService {
     public  ProductRepository productRepository;
     @Autowired
     public  ProductVarRepository productVarRepository;
+    @Transactional
     public List<Product> getAllProduct() {
         return productRepository.findAll();
     }
 
-
+    @Transactional
     public void addProduct(Product product) {
         productRepository.save(product);
     }
@@ -37,6 +38,7 @@ public class ProductService {
     public List<ProductVar> getProductVar(Product product){
        return productVarRepository.findByProductId(product.getProduct_id());
     }
+    @Transactional
     public Optional<ProductVar> getProductVarById(Long Id){
         return productVarRepository.findById(Id);
     }
@@ -46,6 +48,7 @@ public class ProductService {
         Product product = productRepository.findById(Id).get();
         productRepository.delete(product);
     }
+    @Transactional
     public void updateProduct(Long Id, Product product, MultipartFile file) throws IOException {
         Product oldProduct = productRepository.findById(Id).get();
         String imageUUID;
@@ -76,6 +79,7 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    @Transactional
     public Optional<Product> getProductById(Long Id)
     {
         return productRepository.findById(Id);

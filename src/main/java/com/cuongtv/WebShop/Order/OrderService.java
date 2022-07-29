@@ -44,6 +44,7 @@ public class OrderService {
         for (OrderedItem orderedItem : order.getOrderedItems()){
             orderedItem.setOrder(order);
         }
+        cartService.clearCart(customer);
         orderedItemRepository.saveAll(order.getOrderedItems());
     }
     public Optional<Order> getOrderById(Long Id)

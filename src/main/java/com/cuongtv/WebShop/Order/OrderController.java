@@ -21,12 +21,12 @@ public class OrderController {
     @Autowired
     CartService cartService;
 
-    @PostMapping("/payNow")
+    @PostMapping("/placeOrder")
     public String placeOrder(@ModelAttribute("orderDTO") OrderDTO orderDTO) {
 
         orderService.placeOrder(orderDTO, customerService.getCurrentCustomer());
 
-        return "shopcopy";
+        return "redirect:/shop";
     }
 
 //    @GetMapping("/add")

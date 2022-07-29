@@ -35,7 +35,7 @@ public class CartController {
         model.addAttribute("cartCount", productList.size());
         model.addAttribute("total", total);
         model.addAttribute("cart", productList);
-        return "cartCopy";
+        return "cart";
     }
 
     @GetMapping("/addToCart/{sizeid}")
@@ -52,7 +52,7 @@ public class CartController {
         Customer customer = customerService.getCurrentCustomer();
         cartService.removeFromCart(customer, index);
         return "redirect:/cart";
-    } // delete 1 product
+    }
 
     @GetMapping("/checkout")
     public String checkout(Model model){
@@ -66,7 +66,7 @@ public class CartController {
         model.addAttribute("total", total);
         //model.addAttribute("cart", GlobalData.cart);
         model.addAttribute("orderDTO", new OrderDTO());
-        cartService.clearCart(customer);
-        return "checkoutCopy";
-    } // checkout totalPrice
+
+        return "checkout";
+    }
 }

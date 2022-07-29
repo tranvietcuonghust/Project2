@@ -54,7 +54,7 @@ public class HomeController {
             model.addAttribute("customer", customerService.loadUserByUsername(email));
         }
         model.addAttribute("not_authenticated", a instanceof AnonymousAuthenticationToken);
-        return "copyhome";
+        return "home";
     }
 
     @GetMapping("/shop/product/{id}")
@@ -101,7 +101,7 @@ public class HomeController {
         //model.addAttribute("cartCount", GlobalData.cart.size());
         //model.addAttribute("categories", categoryService.getAllCategory());
         model.addAttribute("products", productService.getAllProduct());
-        return "shopcopy";
+        return "shop";
     }
 
     @GetMapping("/shop/viewproduct/{id}")
@@ -110,7 +110,7 @@ public class HomeController {
 
         model.addAttribute("product", productService.getProductById(id).get());
         model.addAttribute("productvars", productService.getProductVar(productService.getProductById(id).get()));
-        return "viewProductCopy";
+        return "viewProduct";
     }
 
     @GetMapping("/edit_profile")
@@ -162,7 +162,7 @@ public class HomeController {
             model.addAttribute("customer", customerService.loadUserByUsername(email));
         }
         model.addAttribute("not_authenticated", a instanceof AnonymousAuthenticationToken);
-        return "copyhome";
+        return "home";
     }
     @GetMapping("/edit_profile/orders")
     public String OrderManage(Model model)
@@ -203,7 +203,7 @@ public class HomeController {
         List<Product> listProducts = productService.listAll(keyword);
         model.addAttribute("products", listProducts);
         model.addAttribute("keyword", keyword);
-        return "shopcopy";
+        return "shop";
     }
 
 }
